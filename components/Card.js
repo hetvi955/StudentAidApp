@@ -24,8 +24,8 @@ function Card({ title, tags, image, onPress, description }) {
             {description}
           </AppText>
           <View style={styles.tagsConatiner}>
-            {tags && tags.map(tag => 
-              <Chip text={tag} style={styles.tag} />
+            {tags && tags.map((tag, i) => 
+              <Chip text={tag} style={styles.tag} key={i} />
             )}
           </View>
         </View>
