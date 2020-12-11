@@ -1,20 +1,69 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React from "react";
+import { StyleSheet, Image, ImageBackground } from "react-native";
+import * as Yup from "yup";
+
+import Screen from "../components/Screen";
+import { AppForm as Form, AppFormField as FormField, SubmitButton } from "../components/forms";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label("Email"),
+  password: Yup.string().required().min(4).label("Password"),
+});
 
 function LoginScreen(props) {
-    return (
-        <View style={styles.container}>
-            <Text>Login</Text>
-        </View>
-    );
+  return (
+    <ImageBackground
+      blurRadius={10}
+      style={styles.background}
+      source={require("../assets/background.jpg")}
+    >
+    <Screen style={styles.container}>
+      <Image style={styles.logo} source={require("../assets/logo.png")} />
+
+      <Form
+        initialValues={{ email: "", password: "" }}
+        onSubmit={(values) => console.log(values)}
+        validationSchema={validationSchema}
+      >
+        <FormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          icon="email"
+          keyboardType="email-address"
+          name="email"
+          placeholder="Email"
+          textContentType="emailAddress"
+        />
+        <FormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          icon="lock"
+          name="password"
+          placeholder="Password"
+          secureTextEntry
+          textContentType="password"
+        />
+        <SubmitButton title="Login" />
+      </Form>
+    </Screen>
+    </ImageBackground>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-    }
-})
+  container: {
+    padding: 10,
+  },
+  background: {
+    flex: 1,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    alignSelf: "center",
+    marginTop: 50,
+    marginBottom: 50,
+  }
+});
 
 export default LoginScreen;

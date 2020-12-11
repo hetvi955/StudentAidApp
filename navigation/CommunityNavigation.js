@@ -7,6 +7,7 @@ import AccountScreen from "../Screens/AccountScreen";
 
 import { StyleSheet, View } from 'react-native'
 import AddPostButton from "./AddPostButton";
+import FeedNavigator from "./FeedNavigator";
 
 
 const Tab = createBottomTabNavigator();
@@ -15,7 +16,7 @@ const CommunityNavigator = () => (
   <Tab.Navigator>
     <Tab.Screen
       name="Feed"
-      component={FeedsScreen}
+      component={FeedNavigator}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="home" color={color} size={size} />
