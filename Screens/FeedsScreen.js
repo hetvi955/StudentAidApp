@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
 import Card from "../components/Card";
 import colors from "../config/colors";
-import Screen from "../components/Screen";
 import routes from "../navigation/routes";
 
 const feedPosts = [
@@ -23,11 +22,23 @@ const feedPosts = [
     }
 ]
 
+const refreshPosts = [
+    {
+        id: 1,
+        title: "Graduation",
+        description: `Graduation is the award of a diploma or academic degree, or the ceremony that is sometimes associated with it, in which students become graduates.`,
+        tags: [ 'college', 'students', 'graduation', '2020' ],
+        image: require("../assets/graduation.jpg")
+    }
+]
+
 function FeedsScreen({ navigation }) {
+    const [posts, setPosts]  = useState(feedPosts);
+    const [refreshing, setRefreshing]  = useState(false);
     return (
         <View style={styles.screen}>
             <FlatList
-            data={feedPosts}
+            data={posts}
             keyExtractor={(post) => post.id.toString()}
             renderItem={({ item }) => (
                 <Card
@@ -38,6 +49,11 @@ function FeedsScreen({ navigation }) {
                     onPress={() => navigation.navigate(routes.POST_DETAILS, item)}
                 />
             )}
+            refreshing={refreshing}
+            onRefresh={() => {
+                setPosts(refreshPosts)
+                setRefreshing(refreshing)
+            }}
             />
         </View>
     );
@@ -47,6 +63,7 @@ const styles = StyleSheet.create({
     screen: {
         padding: 10,
         backgroundColor: colors.light,
+        flex: 1,
     },
 })
 
