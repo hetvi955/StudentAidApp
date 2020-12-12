@@ -13,7 +13,7 @@ function WelcomeScreen({ navigation }) {
     >
       <View style={styles.logoContainer}>
         <Image style={styles.logo} source={require("../assets/logo.png")} />
-        <Text style={styles.tagline}>Help. Learn. Grow</Text>
+        <Text style={styles.tagline}>Help. Learn. Grow.</Text>
       </View>
       <View style={styles.buttonsContainer}>
         <AppButton
