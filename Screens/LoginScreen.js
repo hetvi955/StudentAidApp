@@ -4,6 +4,7 @@ import * as Yup from "yup";
 
 import Screen from "../components/Screen";
 import { AppForm as Form, AppFormField as FormField, SubmitButton } from "../components/forms";
+import colors from "../config/colors";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -12,11 +13,6 @@ const validationSchema = Yup.object().shape({
 
 function LoginScreen(props) {
   return (
-    <ImageBackground
-      blurRadius={10}
-      style={styles.background}
-      source={require("../assets/background.jpg")}
-    >
     <Screen style={styles.container}>
       <Image style={styles.logo} source={require("../assets/logo.png")} />
 
@@ -46,13 +42,13 @@ function LoginScreen(props) {
         <SubmitButton title="Login" />
       </Form>
     </Screen>
-    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+    backgroundColor: colors.background,
   },
   background: {
     flex: 1,
