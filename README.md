@@ -2,7 +2,7 @@
 
 A mobile application built using React Native, which helps students experience an organised lifestyle with less pain.
 
-![screenshots of example app](/images/screenshots@2x.png)
+![screenshots of app](/images/screenshot.jpg)
 
 ## Features
 
