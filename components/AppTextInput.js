@@ -17,7 +17,7 @@ function AppTextInput({ icon, ...otherProps }) {
       )}
       <TextInput
         placeholderTextColor={defaultStyles.colors.medium}
-        style={defaultStyles.text}
+        style={[defaultStyles.text, styles.text]}
         {...otherProps}
       />
     </View>
@@ -36,6 +36,9 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 10,
   },
+  text: {
+    flex: 1,
+  }
 });
 
 export default AppTextInput;

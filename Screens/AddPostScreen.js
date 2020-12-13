@@ -1,17 +1,18 @@
+
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import * as Yup from "yup";
-import CategoryPickerItem from "../components/CategoryPickerItem";
+import CommunityPicker from "../components/CommunityPicker";
 
 import {
     AppForm as Form,
     AppFormField as FormField,
-    FormPicker as Picker,
     SubmitButton,
     FormImagePicker
 } from "../components/forms";
 import Screen from "../components/Screen";
+import AppSwitch from "../components/Switch";
 import colors from "../config/colors";
 
 import random from "../config/RandomColors";
@@ -19,12 +20,14 @@ import random from "../config/RandomColors";
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
   description: Yup.string().label("Description"),
-  category: Yup.object().required().nullable().label("Category"),
-  tags: Yup.string().label("Tags"),
+  tags: Yup.string().required().label("Tags"),
+  communities: Yup.array().required().label("Communities"),
+  image: Yup.object().required().nullable().label("Image"),
+  public: Yup.boolean().label("Public"),
 });
 
 
-const categories = [
+const communities = [
   {
     backgroundColor: random(),
     icon: "account-group",
@@ -59,6 +62,7 @@ const categories = [
 
 function AddPostScreen() {
 
+
   return (
     <ScrollView style={styles.container}>
       <Screen>
@@ -68,7 +72,8 @@ function AddPostScreen() {
             image: null,
             description: "",
             tags: "",
-            category: null,
+            communities: [],
+            public: false,
           }}
           onSubmit={(values) => console.log(values)}
           validationSchema={validationSchema}
@@ -82,18 +87,20 @@ function AddPostScreen() {
             numberOfLines={3}
             placeholder="Description"
           />
-          <Picker
-            items={categories}
-            name="category"
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Category"
-            width="50%"
-          />
           <FormField
             maxLength={255}
             name="tags"
             placeholder="#tag"
           />
+          <View style={styles.picker}>
+            <CommunityPicker
+              items={communities}
+              name="communities"
+              placeholder="Community"
+              width='50%'
+            />
+            <AppSwitch name="public" />
+          </View>
           <SubmitButton title="Post" />
         </Form>
       </Screen>
@@ -107,5 +114,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light,
   },
+  picker: {
+    flex: 1,
+    flexDirection: 'row'
+  }
 });
 export default AddPostScreen;
