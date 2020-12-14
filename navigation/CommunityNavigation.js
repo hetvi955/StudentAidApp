@@ -8,6 +8,7 @@ import AccountScreen from "../Screens/AccountScreen";
 import { StyleSheet, View } from 'react-native'
 import AddPostButton from "./AddPostButton";
 import FeedNavigator from "./FeedNavigator";
+import AccountNavigator from "./AccountNavigator";
 
 
 const Tab = createBottomTabNavigator();
@@ -36,7 +37,7 @@ const CommunityNavigator = () => (
     />
     <Tab.Screen
       name="Account"
-      component={AccountScreen}
+      component={AccountNavigator}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="account" color={color} size={size} />

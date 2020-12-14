@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StyleSheet } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Home from '../Screens/Home';

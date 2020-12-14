@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().label("Description"),
   tags: Yup.string().required().label("Tags"),
   communities: Yup.array().required().label("Communities"),
-  image: Yup.object().required().nullable().label("Image"),
+  image: Yup.string().required().label("Image"),
   public: Yup.boolean().label("Public"),
 });
 
@@ -69,7 +69,7 @@ function AddPostScreen() {
         <Form
           initialValues={{
             title: "",
-            image: null,
+            image: "",
             description: "",
             tags: "",
             communities: [],
