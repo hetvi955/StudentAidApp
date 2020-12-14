@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,14 +8,14 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useFormikContext } from "formik";
 
 import colors from "../config/colors";
 
-function ImageInput({ imageUri, onChangeImage }) {
+function ImageInput({ onChangeImage }) {
   useEffect(() => {
     requestPermission();
   }, []);
+  const [imageUri, setImageUri] = useState("")
 
   const requestPermission = async () => {
     const { granted } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -26,7 +26,10 @@ function ImageInput({ imageUri, onChangeImage }) {
     if (!imageUri) selectImage();
     else
       Alert.alert("Delete", "Are you sure you want to delete this image?", [
-        { text: "Yes", onPress: () => onChangeImage(null) },
+        { text: "Yes", onPress: () => {
+          setImageUri("");
+          onChangeImage("");
+        } },
         { text: "No" },
       ]);
   };
@@ -36,8 +39,12 @@ function ImageInput({ imageUri, onChangeImage }) {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 0.5,
+        base64: true,
       });
-      if (!result.cancelled) onChangeImage(result.uri);
+      if (!result.cancelled) {
+        setImageUri(result.uri)
+        onChangeImage(result.base64);
+      };
     } catch (error) {
       console.log("Error reading an image", error);
     }
@@ -46,14 +53,14 @@ function ImageInput({ imageUri, onChangeImage }) {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <View style={styles.container}>
-        {!imageUri && (
+        {imageUri == "" && (
           <MaterialCommunityIcons
             color={colors.medium}
             name="camera"
             size={40}
           />
         )}
-        {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+        {imageUri !== "" && <Image source={{ uri: imageUri }} style={styles.image} />}
       </View>
     </TouchableWithoutFeedback>
   );

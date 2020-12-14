@@ -5,15 +5,17 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Chip } from 'material-bread';
 
 import AppText from "./AppText";
 import colors from "../config/colors";
+import ListItemSeparator from "./ListItemSeparator";
 
 function Card({ title, tags, image, onPress, description }) {
   return (
-    <TouchableWithoutFeedback onPress={onPress} >
+    <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.card}>
         <Image style={styles.image} source={image} />
         <View style={styles.detailsContainer}>
@@ -29,8 +31,14 @@ function Card({ title, tags, image, onPress, description }) {
             )}
           </View>
         </View>
+        <ListItemSeparator />
+        <View style={styles.icons}>
+          <MaterialCommunityIcons name="heart-outline" color={colors.secondary} size={30} />
+          <MaterialCommunityIcons name="comment" color={colors.primary} size={30} />
+          <MaterialCommunityIcons name="share" color={colors.dark} size={30} />
+        </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableWithoutFeedback>  
   );
 }
 
@@ -64,6 +72,12 @@ const styles = StyleSheet.create({
   tag: {
     marginHorizontal: 5,
     marginBottom: 5
+  },
+  icons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 5,
   }
 });
 

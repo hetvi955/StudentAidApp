@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     StyleSheet,
@@ -8,48 +8,29 @@ import {
 } from "react-native";
 import { useFormikContext } from 'formik';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Button, Icon } from 'material-bread';
+import { Button, Icon, DataTable, DataTableCell, DataTableRow } from 'material-bread';
 
 import AppIcon from './Icon';
-import ListItem from './ListItem';
+import AppListItem from './ListItem';
 import ListItemSeparator from './ListItemSeparator';
 import colors from '../config/colors';
 import AppText from './AppText';
 import Screen from './Screen';
+import ListItem from './ListItem';
 
 
 function CommunityPicker({items, placeholder, name, width}) {
     const [modalVisible, setModalVisible] = useState(false);
-    const [selected, setSelected] = useState('');
+    const [updatedItems, setUpdatedItems] = useState(items.map(item => ({...item, selected: false})));
     const { values, setFieldValue } = useFormikContext()
 
-    const communities = values[name];
-
-    const handleAdd = (item) => {
-        setFieldValue(name, [...values[name], item]);
-        console.log(values[name]);
-    }
-    const handleRemove = (item) => {
-        setFieldValue(
-            name,
-            values[name].filter((ele) => ele.value !== item.value)
-        );
-    };
     
     return (
         <>
         <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
             <View style={[styles.container, { width }]}>
-            
-            {communities ? 
-            (<AppText style={styles.placeholder}>
-                {(communities.map((community) =>
-                `${community.label} ` 
-                ))}
-            </AppText>) 
-            : (
-                <AppText style={styles.placeholder}>{placeholder}</AppText>
-            )}
+    
+            <AppText style={styles.placeholder}>{placeholder}</AppText>
 
             <MaterialCommunityIcons
                 name="chevron-down"
@@ -66,23 +47,37 @@ function CommunityPicker({items, placeholder, name, width}) {
                     onPress={() => setModalVisible(false)}
                     />
                 </View>
-                <FlatList
-                    data={items}
-                    keyExtractor={(item) => item.value.toString()}
-                    renderItem={({ item }) => (
-                        <View 
-                        style={{ backgroundColor: selected == item.value.toString() ? colors.primary : colors.white }}
-                        onPress={() => setSelected(item.value.toString())}
-                        >
-                            <ListItem
-                                title={item.label}
-                                IconComponent={<AppIcon name={item.icon} backgroundColor={colors.medium} />}
-                            />
-                            <ListItemSeparator />
-                        </View>
-                    )}
-                    extraData={selected}
-                />
+                <DataTable>
+                    <FlatList
+                        data={updatedItems}
+                        keyExtractor={(item) => item.value.toString()}
+                        renderItem={({ item }) => (
+                            <DataTableRow
+                                hover
+                                showCheckbox
+                                selected={item.selected}
+                                onPressCheckbox={() => {
+                                    item.selected = !item.selected;
+                                    setUpdatedItems(
+                                        updatedItems.map(ele => ele.value === item.value ? {...item, selected: item.selected} : ele)
+                                    );
+                                    setFieldValue(name, updatedItems.filter(ele => ele.selected));
+                                    // console.log(values[name]);
+                                }}
+                                style={styles.list}
+                            >
+                                <AppIcon 
+                                    name="account-group-outline" 
+                                    backgroundColor={colors.medium}
+                                    
+                                />
+                                <AppText style={styles.icon}>{item.label}</AppText>
+                            </DataTableRow>
+                        )}
+                    />
+                    
+                </DataTable>
+                
             </Screen>
         </Modal>
         </>
@@ -112,10 +107,20 @@ const styles = StyleSheet.create({
     modal: {
         flex: 1,
         backgroundColor: colors.light,
+    },
+    list: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10
+    },
+    icon: {
+        marginLeft: 10
     }
   });
 
 export default CommunityPicker;
+
 
 
 
