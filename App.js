@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
+import { AppLoading } from 'expo';
 
 import AppNavigation from './navigation/AppNavigation';
 import NavigationTheme from './navigation/NavigationTheme';
-import LoginScreen from './Screens/LoginScreen';
-import RegisterScreen from './Screens/RegisterScreen';
-import AuthNavigator from './navigation/AuthNavigation';
+import AuthContext from "./Auth/context";
+import AuthStorage from "./Auth/storage";
+
 
 export default function App() {
+  const [ user, setUser ] = useState();
+  const [isReady, setIsReady] = useState(false);
+
+  const restoreUser = async () => {
+    const user = await AuthStorage.getUser();
+    if (user) setUser(user);
+  };
+
+  if (!isReady)
   return (
-    <NavigationContainer theme={NavigationTheme}>
-      <AppNavigation />
-    </NavigationContainer>
+    <AppLoading startAsync={restoreUser} onFinish={() => setIsReady(true)} />
+  );
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      <NavigationContainer theme={NavigationTheme}>
+        <AppNavigation />
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 }
 
