@@ -1,10 +1,14 @@
-import React from "react";
-import { StyleSheet, ImageBackground, Image } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, ImageBackground, Image, ActivityIndicator } from "react-native";
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
-import { AppForm as Form, AppFormField as FormField, SubmitButton } from "../components/forms";
+import { AppForm as Form, AppFormField as FormField, SubmitButton, ErrorMessage } from "../components/forms";
 import colors from "../config/colors";
+import authApi from "../api/auth";
+import useAuth from "../Auth/useAuth";
+import useApi from "../hooks/useApi";
+import { ScrollView } from "react-native-gesture-handler";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -13,15 +17,42 @@ const validationSchema = Yup.object().shape({
 });
 
 function RegisterScreen() {
-  return (
 
-    <Screen style={styles.container}>
+  const registerApi = useApi(authApi.register);
+  const loginApi = useApi(authApi.login);
+  const auth = useAuth();
+  const [error, setError] = useState();
+
+  const handleSubmit = async ({name, email, password}) => {
+    const result = await registerApi.request({
+      Name: name, Email: email, Password: password
+    });
+    if (!result.ok) {
+      if (result.data) setError(result.data.message);
+      else {
+        setError("An unexpected error occurred.");
+        console.log(result);
+      }
+      return;
+    }
+    const { data : { token: authToken } } = await loginApi.request(
+      email,
+      password
+    );
+    auth.logIn(authToken);
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+    <ActivityIndicator visible={registerApi.loading || loginApi.loading} />
+    <Screen>
       <Form
         initialValues={{ name: "", email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
         <Image style={styles.logo} source={require("../assets/logo.png")} />
+        <ErrorMessage error={error} visible={error} />
         <FormField
           autoCorrect={false}
           icon="account"
@@ -49,6 +80,7 @@ function RegisterScreen() {
         <SubmitButton title="Register" />
       </Form>
     </Screen>
+    </ScrollView>
   );
 }
 
