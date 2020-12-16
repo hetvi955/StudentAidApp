@@ -7,8 +7,7 @@ import CommunityNavigator from './CommunityNavigation';
 import AuthNavigator from './AuthNavigation';
 import Updates from '../Screens/UpdateApi';
 import AuthContext from '../Auth/context';
-import DailyWork from '../Screens/DailyWorkScreen';
-import NewNote from '../Screens/addNoteScreen'
+import DailyWorkNavigator from './DailyWorkNavigation';
 
 const Drawer = createDrawerNavigator();
 function AppNavigation(props) {
@@ -20,7 +19,7 @@ function AppNavigation(props) {
                 (<Drawer.Screen name="Community" component={CommunityNavigator} />)
                 : (<Drawer.Screen name="Community" component={AuthNavigator} />)}
             <Drawer.Screen name="Jobs/Internships" component={Updates} />
-            <Drawer.Screen name="Daily Works" component={DailyWork} />
+            <Drawer.Screen name="Daily Works" component={DailyWorkNavigator} />
         </Drawer.Navigator>
     );
 }
