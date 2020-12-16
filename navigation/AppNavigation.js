@@ -7,6 +7,8 @@ import CommunityNavigator from './CommunityNavigation';
 import AuthNavigator from './AuthNavigation';
 import Updates from '../Screens/UpdateApi';
 import AuthContext from '../Auth/context';
+import DailyWork from '../Screens/DailyWorkScreen';
+import NewNote from '../Screens/addNoteScreen'
 
 const Drawer = createDrawerNavigator();
 function AppNavigation(props) {
@@ -14,16 +16,17 @@ function AppNavigation(props) {
     return (
         <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={Home} />
-            {authContext.user ? 
-            (<Drawer.Screen name="Community" component={CommunityNavigator} />) 
-            : (<Drawer.Screen name="Community" component={AuthNavigator} />)}
+            {authContext.user ?
+                (<Drawer.Screen name="Community" component={CommunityNavigator} />)
+                : (<Drawer.Screen name="Community" component={AuthNavigator} />)}
             <Drawer.Screen name="Jobs/Internships" component={Updates} />
+            <Drawer.Screen name="Daily Works" component={DailyWork} />
         </Drawer.Navigator>
     );
 }
 
 const styles = StyleSheet.create({
-    
+
 })
 
 export default AppNavigation;
