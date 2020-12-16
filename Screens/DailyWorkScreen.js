@@ -25,13 +25,14 @@ const data = [
     { key: 7, title: 'Note 7', body: 'Body of Note 7' },
 ];
 
-export default function DailyWork() {
+export default function DailyWork(props) {
     const [notes, setNotes] = useState(data);
     return (
         <View style={styles.container}>
-            <Header title="My daily works" />
             <View style={styles.button}>
-                <Button title="Add work" />
+                <Button title="Add work" onPress={() => {
+                    props.navigation.navigate('NewNote')
+                }} />
             </View>
             <View style={styles.list}>
                 <FlatList
