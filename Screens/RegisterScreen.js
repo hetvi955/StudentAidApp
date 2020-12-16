@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { StyleSheet, ImageBackground, Image, ActivityIndicator } from "react-native";
+import { StyleSheet, Image, View } from "react-native";
 import * as Yup from "yup";
+import { Button } from 'material-bread';
 
 import Screen from "../components/Screen";
 import { AppForm as Form, AppFormField as FormField, SubmitButton, ErrorMessage } from "../components/forms";
@@ -8,7 +9,8 @@ import colors from "../config/colors";
 import authApi from "../api/auth";
 import useAuth from "../Auth/useAuth";
 import useApi from "../hooks/useApi";
-import { ScrollView } from "react-native-gesture-handler";
+import AppText from "../components/AppText";
+import ActivityIndicator from '../components/ActivityIndicator';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -16,8 +18,7 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(4).label("Password"),
 });
 
-function RegisterScreen() {
-
+function RegisterScreen({ navigation }) {
   const registerApi = useApi(authApi.register);
   const loginApi = useApi(authApi.login);
   const auth = useAuth();
@@ -43,9 +44,9 @@ function RegisterScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <>
     <ActivityIndicator visible={registerApi.loading || loginApi.loading} />
-    <Screen>
+    <Screen style={styles.container}>
       <Form
         initialValues={{ name: "", email: "", password: "" }}
         onSubmit={handleSubmit}
@@ -77,10 +78,14 @@ function RegisterScreen() {
           secureTextEntry
           textContentType="password"
         />
+        <View style={styles.link}>
+          <AppText style={styles.text}>already have account?</AppText>
+          <Button text={'Login'} type="text" textColor={colors.primary} onPress={() => navigation.navigate("Login")}/>
+        </View>
         <SubmitButton title="Register" />
       </Form>
     </Screen>
-    </ScrollView>
+    </>
   );
 }
 
@@ -99,6 +104,13 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginBottom: 30,
   },
+  link: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  text: {
+    fontSize: 16,
+  }
 });
 
 export default RegisterScreen;
