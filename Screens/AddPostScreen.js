@@ -1,8 +1,9 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import * as Yup from "yup";
+import PostApi from "../api/posts";
 import CommunityPicker from "../components/CommunityPicker";
 
 import {
@@ -14,16 +15,19 @@ import {
 import Screen from "../components/Screen";
 import AppSwitch from "../components/Switch";
 import colors from "../config/colors";
+import makeHashtagArray from "../config/makeHashtags";
 
 import random from "../config/RandomColors";
+import UploadScreen from "./UploadScreen";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
   description: Yup.string().label("Description"),
   tags: Yup.string().required().label("Tags"),
-  communities: Yup.array().required().label("Communities"),
+  communities: Yup.array().label("Communities"),
   image: Yup.string().required().label("Image"),
   public: Yup.boolean().label("Public"),
+  anonymous: Yup.boolean().label("Anonymous"),
 });
 
 
@@ -60,22 +64,46 @@ const communities = [
   },
 ];
 
-function AddPostScreen() {
+function AddPostScreen({ route }) {
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
 
+  const handleSubmit = async (post, { resetForm }) => {
+    setProgress(0);
+    setUploadVisible(true);
+    const result = await PostApi.createPost(
+      { ...post, tags : makeHashtagArray(post.tags) },
+      (progress) => setProgress(progress)
+    );
+
+    if (!result.ok) {
+      setUploadVisible(false);
+      console.log(result.data);
+      return alert("Could not save the listing");
+    }
+
+    resetForm();
+  };
 
   return (
     <ScrollView style={styles.container}>
+      <UploadScreen
+        onDone={() => setUploadVisible(false)}
+        progress={progress}
+        visible={uploadVisible}
+      />
       <Screen>
         <Form
           initialValues={{
             title: "",
-            image: "",
             description: "",
             tags: "",
             communities: [],
             public: false,
+            anonymous: false,
+            image: "",
           }}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           <FormImagePicker name="image" style={styles.image} />  
@@ -92,14 +120,15 @@ function AddPostScreen() {
             name="tags"
             placeholder="#tag"
           />
+          <CommunityPicker
+            items={communities}
+            name="communities"
+            placeholder="Community"
+            width='50%'
+          />
           <View style={styles.picker}>
-            <CommunityPicker
-              items={communities}
-              name="communities"
-              placeholder="Community"
-              width='50%'
-            />
-            <AppSwitch name="public" />
+            <AppSwitch name="anonymous" title="Anonymous User" />
+            <AppSwitch name="public" title="Public Post" />
           </View>
           <SubmitButton title="Post" />
         </Form>
@@ -116,7 +145,8 @@ const styles = StyleSheet.create({
   },
   picker: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginBottom: 30,
   }
 });
 export default AddPostScreen;
