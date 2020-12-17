@@ -10,6 +10,7 @@ import AppText from "../components/AppText";
 import useAuth from '../Auth/useAuth';
 
 
+
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
 
