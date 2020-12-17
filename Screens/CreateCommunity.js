@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import * as Yup from "yup";
-import { useFormikContext } from 'formik';
+
 
 import { AppForm as Form, AppFormField as FormField, SubmitButton, ErrorMessage } from '../components/forms';
-import Screen from '../components/Screen';
 import colors from '../config/colors';
-import RandomID from '../config/RandomID';
 import useApi from '../hooks/useApi';
 import community from "../api/community";
 
@@ -15,11 +13,11 @@ const validationSchema = Yup.object().shape({
   communityName: Yup.string().required().min(1).label("Community Name"),
 });
 
-export default function CreateCommunity() {
+export default function CreateCommunity({ navigation }) {
   const createCommunityApi = useApi(community.create);
   const [error, setError] = useState();
 
-  const handleSubmit = async({ communityName }) => {
+  const handleSubmit = async({ communityName }, { resetForm }) => {
     const result = await createCommunityApi.request(communityName);
     if (!result.ok) {
       if (result.data) setError(result.data.message);
@@ -28,8 +26,12 @@ export default function CreateCommunity() {
         console.log(result);
       }
       return;
+    }else {
+      console.log(result.data);
+      resetForm();
+      setError();
+      navigation.navigate("CommunityPage", { communityID : result.data});
     }
-    console.log(result.data);
   }
 
   return (
@@ -42,7 +44,7 @@ export default function CreateCommunity() {
         validationSchema={validationSchema}
       >
         <ErrorMessage error={error} visible={error} /> 
-        <FormField maxLength={255} name="communityName" placeholder="Community Name" />
+        <FormField maxLength={255} name="communityName" placeholder="Community Name" autoCapitalize="none" />
         <SubmitButton title="Create" style={styles.button} />
       </Form>
     </View>

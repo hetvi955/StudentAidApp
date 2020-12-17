@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import AccountScreen from "../Screens/AccountScreen";
 import CreateCommunity from "../Screens/CreateCommunity";
+import CommunityPage from "../Screens/CommunityPage";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,10 @@ const AccountNavigator = () => (
       options={{
         title: ''
       }}
+    />
+    <Stack.Screen 
+      name="CommunityPage" 
+      component={CommunityPage}
     />
   </Stack.Navigator>
 );

@@ -17,6 +17,7 @@
     "apisauce": "^2.0.0",
     "dotenv": "^8.2.0",
     "expo": "~39.0.2",
+    "expo-clipboard": "^1.0.1",
     "expo-constants": "~9.2.0",
     "expo-font": "~8.3.0",
     "expo-image-picker": "~9.1.1",
@@ -33,13 +34,15 @@
     "react-native-config": "^1.4.1",
     "react-native-dotenv": "^2.4.3",
     "react-native-gesture-handler": "~1.7.0",
+    "react-native-progress": "^4.1.2",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
     "react-native-svg": "^12.1.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
-    "yup": "^0.32.8"
+    "yup": "^0.32.8",
+    "expo-av": "~8.6.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
