@@ -26,11 +26,11 @@ function CommunityPage() {
             <Image style={styles.image} source={require("../assets/community.png")} />
             
             <View style={styles.button}>
-                <Button text={"Join"} type="flat" color={colors.secondary} loading={JoinApi.loading} />
+                <Button text={route.params.isAdmin ? "Admin" : "Member"} type="flat" color={colors.secondary} />
             </View>
             <View style={styles.detailsContainer}>
-                <AppText style={styles.title}>Community</AppText>
-                <Chip text={route.params.communityID} style={styles.tag}
+                <AppText style={styles.title}>{route.params.communityName}</AppText>
+                <Chip text={route.params.id} style={styles.tag}
                     rightIcon={<Icon 
                         name="content-copy" 
                         color={colors.medium} 

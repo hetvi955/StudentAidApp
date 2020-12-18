@@ -30,7 +30,7 @@ export default function CreateCommunity({ navigation }) {
       console.log(result.data);
       resetForm();
       setError();
-      navigation.navigate("CommunityPage", { communityID : result.data});
+      navigation.navigate("CommunityPage", { id : result.data, isAdmin: true, communityName: communityName });
     }
   }
 
