@@ -1,33 +1,31 @@
-import React from 'react';
-import { Text, View, StyleSheet, TextInput, Button } from 'react-native';
+import React, { useEffect } from 'react';
+
+import { Text, View, Button, StyleSheet } from 'react-native';
 import { ScrollView } from "react-native-gesture-handler";
 import * as Yup from "yup";
-//import CommunityPicker from "../components/CommunityPicker"
+
 import {
     AppForm as Form,
     AppFormField as FormField,
     SubmitButton,
 } from "../components/forms"
 import Screen from "../components/Screen";
-//import AppSwitch from "../components/Switch";
 import colors from "../config/colors";
-
-//import random from "../config/RandomColors";
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label("Title"),
     body: Yup.string().label("Body"),
 });
 
-export default function NewNote(props) {
 
+const NoteDetail = (props) => {
     return (
         <ScrollView style={styles.container}>
             <Screen>
                 <Form
                     initialValues={{
-                        title: "",
-                        body: "",
+                        title: props.route.params.title,
+                        body: props.route.params.body,
                     }}
                     onSubmit={(values) => {
                         console.log(values)
@@ -35,23 +33,20 @@ export default function NewNote(props) {
                     }}
                     validationSchema={validationSchema}
                 >
-                    <FormField maxLength={255} name="title" placeholder="Title of your note" />
+                    <FormField maxLength={255} name="title" />
                     <FormField
                         maxLength={255}
                         multiline
                         name="body"
                         numberOfLines={15}
-                        placeholder="Your note goes here"
                     />
 
                     <SubmitButton title="Save" />
                 </Form>
             </Screen>
         </ScrollView>
-
-    );
+    )
 }
-
 const styles = StyleSheet.create({
     container: {
         padding: 10,
@@ -59,3 +54,5 @@ const styles = StyleSheet.create({
         backgroundColor: colors.light,
     },
 });
+
+export default NoteDetail;
