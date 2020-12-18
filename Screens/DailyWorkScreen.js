@@ -18,13 +18,13 @@ import db from '../sqlite/database'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const data = [
-    { key: 1, title: 'Note 1', body: 'Body of Note 1' },
-    { key: 2, title: 'Note 2', body: 'Body of Note 2' },
-    { key: 3, title: 'Note 3', body: 'Body of Note 3' },
-    { key: 4, title: 'Note 4', body: 'Body of Note 4' },
-    { key: 5, title: 'Note 5', body: 'Body of Note 5' },
-    { key: 6, title: 'Note 6', body: 'Body of Note 6' },
-    { key: 7, title: 'Note 7', body: 'Body of Note 7' },
+    { key: 1, title: 'Note 1', body: 'Hello everyone, how are you' },
+    { key: 2, title: 'Note 2', body: 'Hope everyone are good' },
+    { key: 3, title: 'Note 3', body: 'You knwo what, I am great' },
+    { key: 4, title: 'Note 4', body: 'Ammuku dummuku ammal dummal' },
+    { key: 5, title: 'Note 5', body: 'Ey yo! I have become an android developer now' },
+    { key: 6, title: 'Note 6', body: 'Come on man, you got this!' },
+    { key: 7, title: 'Note 7', body: 'Bla bla bla bla bla bla bla bla bla' },
 ];
 
 export default function DailyWork(props) {
@@ -50,7 +50,7 @@ export default function DailyWork(props) {
                     keyExtractor={(item) => item.key}
                     data={data}
                     renderItem={({ item }) => (
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => { props.navigation.navigate('Note', item) }}>
                             <Text style={styles.item}>{item.title}</Text>
                         </TouchableOpacity>
                     )}
