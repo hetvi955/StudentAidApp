@@ -9,7 +9,9 @@ function AppButton({ title, onPress, color = "primary" }) {
       style={[styles.button, { backgroundColor: colors[color] }]}
       onPress={onPress}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={styles.text}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -23,6 +25,7 @@ const styles = StyleSheet.create({
     padding: 15,
     width: "100%",
     marginVertical: 10,
+    flexDirection: 'row'
   },
   text: {
     color: colors.white,

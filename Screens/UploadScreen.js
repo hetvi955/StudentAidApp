@@ -18,7 +18,7 @@ function UploadScreen({ onDone, progress = 0, visible = false }) {
         ) : (
             <Video
                 source={require('../assets/animations/done.mp4')}
-                rate={1.0}
+                rate={0.5}
                 isMuted={true}
                 resizeMode="cover"
                 shouldPlay
