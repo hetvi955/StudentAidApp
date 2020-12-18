@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import * as Yup from "yup";
@@ -17,8 +17,11 @@ import AppSwitch from "../components/Switch";
 import colors from "../config/colors";
 import makeHashtagArray from "../config/makeHashtags";
 
-import random from "../config/RandomColors";
 import UploadScreen from "./UploadScreen";
+import communityApi from "../api/community";
+import useApi from "../hooks/useApi";
+import AppText from "../components/AppText";
+import AppButton from "../components/AppButton";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
@@ -31,42 +34,10 @@ const validationSchema = Yup.object().shape({
 });
 
 
-const communities = [
-  {
-    backgroundColor: random(),
-    icon: "account-group",
-    label: "Community1",
-    value: 1,
-  },
-  {
-    backgroundColor: random(),
-    icon: "account-group",
-    label: "Community2",
-    value: 2,
-  },
-  {
-    backgroundColor: random(),
-    icon: "account-group",
-    label: "Community3",
-    value: 3,
-  },
-  {
-    backgroundColor: random(),
-    icon: "account-group",
-    label: "Community4",
-    value: 4,
-  },
-  {
-    backgroundColor: random(),
-    icon: "account-group",
-    label: "Community5",
-    value: 5,
-  },
-];
-
-function AddPostScreen({ route }) {
+function AddPostScreen() {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+
 
   const handleSubmit = async (post, { resetForm }) => {
     setProgress(0);
@@ -106,7 +77,9 @@ function AddPostScreen({ route }) {
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          <FormImagePicker name="image" style={styles.image} />  
+          <View style={styles.imageContainer}>
+            <FormImagePicker name="image" />  
+          </View>
           <FormField maxLength={255} name="title" placeholder="Title" />
           <FormField
             maxLength={255}
@@ -117,20 +90,24 @@ function AddPostScreen({ route }) {
           />
           <FormField
             maxLength={255}
+            multiline
             name="tags"
             placeholder="#tag"
           />
           <CommunityPicker
-            items={communities}
             name="communities"
             placeholder="Community"
             width='50%'
           />
-          <View style={styles.picker}>
+          <View style={styles.picker} >
             <AppSwitch name="anonymous" title="Anonymous User" />
+          </View>
+          <View style={styles.picker} >
             <AppSwitch name="public" title="Public Post" />
           </View>
-          <SubmitButton title="Post" />
+          <View style={styles.buttonContainer}>
+            <SubmitButton title="Add Post" />
+          </View>
         </Form>
       </Screen>
     </ScrollView>
@@ -146,7 +123,13 @@ const styles = StyleSheet.create({
   picker: {
     flex: 1,
     flexDirection: 'row',
-    marginBottom: 30,
+    justifyContent: 'space-between',
+  },
+  imageContainer: {
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    paddingHorizontal: 35,
   }
 });
 export default AddPostScreen;

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useFormikContext } from 'formik';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Button, Icon, DataTable, DataTableCell, DataTableRow } from 'material-bread';
+import { Button, Icon, DataTable, DataTableRow, DataTableCell } from 'material-bread';
 
 import AppIcon from './Icon';
 import AppListItem from './ListItem';
@@ -17,14 +17,29 @@ import colors from '../config/colors';
 import AppText from './AppText';
 import Screen from './Screen';
 import ListItem from './ListItem';
+import communityApi from "../api/community";
+import useApi from "../hooks/useApi";
+import ActivityIndicator from './ActivityIndicator';
 
 
-function CommunityPicker({items, placeholder, name, width}) {
+function CommunityPicker({ placeholder, name, width }) {
     const [modalVisible, setModalVisible] = useState(false);
-    const [updatedItems, setUpdatedItems] = useState(items.map(item => ({...item, selected: false})));
-    const { values, setFieldValue } = useFormikContext()
+    const [updatedItems, setUpdatedItems] = useState([]);
+    const { setFieldValue } = useFormikContext();
 
-    
+    const getitems = async() => {
+        const result = await communityApi.getCommunities();
+        if(!result.ok){
+            console.log(result.problem, result.originalError);
+        }
+        const array = result.data.data.map(community => ({...community, selected: false}));
+        setUpdatedItems(array);
+    }
+
+    useEffect(() => {
+        getitems();
+    },[]);
+
     return (
         <>
         <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
@@ -47,37 +62,37 @@ function CommunityPicker({items, placeholder, name, width}) {
                     onPress={() => setModalVisible(false)}
                     />
                 </View>
+                {updatedItems && 
                 <DataTable>
                     <FlatList
                         data={updatedItems}
-                        keyExtractor={(item) => item.value.toString()}
+                        keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
                             <DataTableRow
-                                hover
                                 showCheckbox
                                 selected={item.selected}
                                 onPressCheckbox={() => {
                                     item.selected = !item.selected;
                                     setUpdatedItems(
-                                        updatedItems.map(ele => ele.value === item.value ? {...item, selected: item.selected} : ele)
+                                        updatedItems.map(ele => ele.id == item.id ? {...item, selected: item.selected} : ele)
                                     );
-                                    setFieldValue(name, updatedItems.filter(ele => ele.selected));
-                                    // console.log(values[name]);
+                                    const filter = updatedItems.filter(item => item.selected).map(ele => ele.id);
+                                    setFieldValue(name, filter);
                                 }}
                                 style={styles.list}
                             >
-                                <AppIcon 
-                                    name="account-group-outline" 
-                                    backgroundColor={colors.medium}
-                                    
-                                />
-                                <AppText style={styles.icon}>{item.label}</AppText>
+                                <DataTableCell>
+                                    <AppIcon 
+                                        name="account-group-outline" 
+                                        backgroundColor={colors.medium}
+                                        
+                                    />
+                                    <AppText style={styles.icon}>{item.communityName}</AppText>
+                                </DataTableCell>
                             </DataTableRow>
                         )}
-                    />
-                    
-                </DataTable>
-                
+                    /> 
+                </DataTable>}
             </Screen>
         </Modal>
         </>

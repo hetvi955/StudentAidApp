@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Alert } from "react-native";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -8,7 +9,7 @@ import Icon from "../components/Icon";
 import Screen from "../components/Screen";
 import AppText from "../components/AppText";
 import useAuth from '../Auth/useAuth';
-
+import RandomColor from "../config/RandomColors";
 
 
 function AccountScreen({ navigation }) {
@@ -20,7 +21,7 @@ function AccountScreen({ navigation }) {
         <ListItem
           title={user.name}
           subTitle={user.email}
-          image={require("../assets/student.jpg")}
+          IconComponent={<Icon name="account" iconColor={colors.dark} backgroundColor={colors.light} size={60} />}
         />
       </View>
       <ListItem
