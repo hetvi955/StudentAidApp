@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Text,
     View,
@@ -12,6 +12,8 @@ import Constants from 'expo-constants';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import Header from '../components/Header';
+
+import db from '../sqlite/database'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -27,6 +29,14 @@ const data = [
 
 export default function DailyWork(props) {
     const [notes, setNotes] = useState(data);
+    useEffect(() => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, count INT)'
+            )
+        })
+    }, [])
+
     return (
         <View style={styles.container}>
             <View style={styles.button}>

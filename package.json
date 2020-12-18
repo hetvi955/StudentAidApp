@@ -42,7 +42,9 @@
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
     "yup": "^0.32.8",
-    "expo-av": "~8.6.0"
+    "expo-av": "~8.6.0",
+    "expo-secure-store": "~9.2.0",
+    "expo-sqlite": "~8.4.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
