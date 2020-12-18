@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Alert } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -10,10 +10,28 @@ import Screen from "../components/Screen";
 import AppText from "../components/AppText";
 import useAuth from '../Auth/useAuth';
 import RandomColor from "../config/RandomColors";
+import useApi from "../hooks/useApi";
+import community from "../api/community";
+import { FlatList } from "react-native-gesture-handler";
 
 
 function AccountScreen({ navigation }) {
+  const [Communities, setCommunities] = useState([]);
   const { user, logOut } = useAuth();
+
+  const getCommunity = async() => {
+    const result = await community.getCommunities();
+    if(!result.ok){
+      console.log(result.problem, result.originalError);
+      return;
+    }
+    setCommunities(result.data.data);
+  }
+
+  useEffect(() => {
+    getCommunity();
+  }, [])
+  
 
   return (
     <Screen style={styles.screen}>
@@ -41,22 +59,29 @@ function AccountScreen({ navigation }) {
         ])}
       />
       <AppText style={styles.header}>Communities</AppText>
-      <ListItem
-        title="Community1"
-        IconComponent={<Icon name="account-group-outline" backgroundColor={colors.medium} />}
-      />
-      <ListItemSeparator />
-      <ListItem
-        title="Community2"
-        subTitle="(Admin)"
-        IconComponent={<Icon name="account-group-outline" backgroundColor={colors.medium} />}
-      />
+      {Communities && <FlatList
+        data={Communities}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <>
+            <ListItem
+              title={item.communityName}
+              subTitle={item.isAdmin ? "(Admin)" : "(Member)"}
+              IconComponent={<Icon name="account-group-outline" backgroundColor={colors.medium} />}
+              onPress={() => navigation.navigate("CommunityPage", item)}
+            />
+            <ListItemSeparator />
+          </>
+        )}
+      />}
       <AppText></AppText>
-      <ListItem
-        title="Log Out"
-        IconComponent={<Icon name="logout" backgroundColor="#ed4618" />}
-        onPress={() => logOut()}
-      />
+      <View style={styles.logout}>
+        <ListItem
+          title="Log Out"
+          IconComponent={<Icon name="logout" backgroundColor="#ed4618" />}
+          onPress={() => logOut()}
+        />
+      </View>
     </Screen>
   );
 }
@@ -72,6 +97,10 @@ const styles = StyleSheet.create({
     color: colors.medium,
     marginLeft: 20,
     marginVertical: 5,
+  },
+  logout: {
+    marginTop: 20,
+    marginBottom: 40,
   }
 });
 
