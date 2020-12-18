@@ -42,7 +42,8 @@
     "react-native-svg": "^12.1.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
-    "yup": "^0.32.8"
+    "yup": "^0.32.8",
+    "expo-sqlite": "~8.4.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
