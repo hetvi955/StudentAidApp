@@ -1,5 +1,7 @@
 import client from "./client";
 
+const getPublicPosts = () => client.get("/posts/publicPosts");
+
 export const createPost = (post, onUploadProgress) => {
     return client.post("/posts/createPost", post, {
         onUploadProgress: (progress) =>
@@ -9,4 +11,5 @@ export const createPost = (post, onUploadProgress) => {
 
 export default {
   createPost,
+  getPublicPosts,
 };

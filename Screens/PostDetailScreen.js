@@ -10,7 +10,7 @@ function PostDetailScreen({ route }) {
 
   return (
     <View>
-      <Image style={styles.image} source={feeds.image} />
+      <Image style={styles.image} source={{ uri: `data:image/png;base64,${feeds.image}`}} resizeMode='stretch' backgroundColor={colors.dark} />
       <View style={styles.detailsContainer}>
         <AppText style={styles.title}>{feeds.title}</AppText>
         <AppText style={styles.description}>{feeds.description}</AppText>
