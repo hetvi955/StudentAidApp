@@ -42,7 +42,7 @@ function ImageInput({ onChangeImage }) {
         base64: true,
       });
       if (!result.cancelled) {
-        setImageUri(result.uri)
+        setImageUri(`data:image/png;base64,${result.base64}`)
         onChangeImage(result.base64);
       };
     } catch (error) {
