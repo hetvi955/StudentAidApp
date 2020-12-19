@@ -13,10 +13,12 @@ import RandomColor from "../config/RandomColors";
 import useApi from "../hooks/useApi";
 import community from "../api/community";
 import { FlatList } from "react-native-gesture-handler";
+import AppModal from "../components/AppModal";
 
 
 function AccountScreen({ navigation }) {
   const [Communities, setCommunities] = useState([]);
+  const [join, setJoin] = useState(false);
   const { user, logOut } = useAuth();
 
   const getCommunity = async() => {
@@ -51,13 +53,9 @@ function AccountScreen({ navigation }) {
       <ListItem
         title="Join Community"
         IconComponent={<Icon name="account-arrow-right-outline" backgroundColor={colors.medium} />}
-        onPress={() => Alert.alert("Join", "Are you sure you want to join this community?", [
-          { text: "Join", onPress: () => {
-            console.log("join")
-          } },
-          { text: "Cancel" },
-        ])}
+        onPress={() => setJoin(true)}
       />
+      {join && <AppModal visible={true} setVisible={setJoin} />}
       <AppText style={styles.header}>Communities</AppText>
       {Communities && <FlatList
         data={Communities}
@@ -74,7 +72,6 @@ function AccountScreen({ navigation }) {
           </>
         )}
       />}
-      <AppText></AppText>
       <View style={styles.logout}>
         <ListItem
           title="Log Out"
@@ -105,3 +102,11 @@ const styles = StyleSheet.create({
 });
 
 export default AccountScreen;
+
+
+// Alert.alert("Join", "Are you sure you want to join this community?", [
+//   { text: "Join", onPress: () => {
+//     console.log("join")
+//   } },
+//   { text: "Cancel" },
+// ])

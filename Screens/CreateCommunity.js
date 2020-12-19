@@ -45,7 +45,7 @@ export default function CreateCommunity({ navigation }) {
       >
         <ErrorMessage error={error} visible={error} /> 
         <FormField maxLength={255} name="communityName" placeholder="Community Name" autoCapitalize="none" />
-        <SubmitButton title="Create" style={styles.button} />
+        <SubmitButton title="Create" />
       </Form>
     </View>
   );

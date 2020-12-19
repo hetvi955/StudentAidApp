@@ -11,16 +11,9 @@ import useApi from "../hooks/useApi";
 import CommunityApi from "../api/community";
 
 function CommunityPage() {
-    const [join, setJoin] = useState(false)
-    const JoinApi = useApi(CommunityApi.join);
+
     const route = useRoute();
-    const handleJoin = async( communityID ) => {
-        const result = await JoinApi.request(communityID);
-        if (!result.ok) {
-            console.log();
-            return; 
-        }
-    }
+
     return (
         <View>
             <Image style={styles.image} source={require("../assets/community.png")} />
@@ -29,13 +22,13 @@ function CommunityPage() {
                 <Button text={route.params.isAdmin ? "Admin" : "Member"} type="flat" color={colors.secondary} />
             </View>
             <View style={styles.detailsContainer}>
-                <AppText style={styles.title}>{route.params.communityName}</AppText>
+                <AppText style={styles.title}>{route.params.communityName || "Community"}</AppText>
                 <Chip text={route.params.id} style={styles.tag}
                     rightIcon={<Icon 
                         name="content-copy" 
                         color={colors.medium} 
                         iconComponent={MaterialCommunityIcons} 
-                        onPress={() => Clipboard.setString(route.params.communityID)}
+                        onPress={() => Clipboard.setString(route.params.id)}
                     />}
                 />
             </View>
