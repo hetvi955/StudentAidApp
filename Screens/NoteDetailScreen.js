@@ -30,6 +30,9 @@ const NoteDetail = (props) => {
                     onSubmit={(values) => {
                         console.log(values)
                         props.navigation.goBack();
+                        /* Put route/ Update route
+                           Edit note feature, update title and body of the note in db
+                        */
                     }}
                     validationSchema={validationSchema}
                 >
