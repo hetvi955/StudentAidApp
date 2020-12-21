@@ -8,6 +8,10 @@ import {View,
   ScrollView, 
   SafeAreaView, 
   TextInput} from 'react-native';
+import colors from '../config/colors';
+import Separator from '../components/ListItemSeparator';
+import { Card, CardContent, Chip } from 'material-bread';
+import { camelcaseToArray } from '../config/makeHashtags';
 
 function Update() {
   const [data, setData]= useState([]);
@@ -42,15 +46,20 @@ function getData() {
      }else{
        let updates= data.map((val, key)=>{
          return <SafeAreaView key={key} >
-           
-           <Text style={styles.head}>{val.company.display_name}</Text>
-           <Text style={styles.type}>{val.contract_type}</Text>
-           <Text style={styles.location}>{val.location.area}</Text>
-           <Text style={styles.desc}>{val.description}</Text>
-           <Text style={styles.link}
-                onPress={() => Linking.openURL(val.redirect_url)}>
-            Read more..
-          </Text>
+           <Card style={styles.card} onPress={() => Linking.openURL(val.redirect_url)}>
+            <CardContent>
+              <Text style={styles.head}>{val.company.display_name}</Text>
+              <Text style={styles.type}>{val.contract_type}</Text>
+              <View style={styles.location}>
+              {val.location.area.map((ele, i) => (
+                  i == 0 ?
+                  <Text key={i} style={{ fontSize: 15, fontWeight: '500' }}>{ele} - </Text> :
+                  <Chip text={ele} key={i} style={{ marginHorizontal: 10 }} />
+              ))}
+              </View>
+              <Text style={styles.desc}>{val.description}</Text>
+            </CardContent>
+           </Card>
          </SafeAreaView>
        })
 
@@ -59,7 +68,7 @@ function getData() {
           <Text style={styles.top}>Here's your weekly Job update! </Text>
           <Text style={styles.search}>Couldn't find what you are looking for? Search here. </Text>
           <TextInput value={query} placeholder="Search category" onChangeText={(query)=>{setQuery(query), console.log(query), console.log(baseurl)}}  
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 , margin:10 , borderRadius: 5 , padding: 10}} />
+          style={styles.searchBox} />
            {updates} 
         </ScrollView>
         
@@ -74,37 +83,36 @@ export default Update;
       container: {
         marginTop: StatusBar.currentHeight,
         flex: 1,
-        margin:10
+        backgroundColor: colors.light,
       },
       top: {
         marginLeft:10,
         marginTop:15,
-        fontWeight: "100",
+        fontWeight: "200",
         fontSize: 23,
-        color:"olive",
+        color: colors.primary,
         fontFamily:"Roboto"
       },
       head: {
-        marginLeft:10,
-        marginTop:15,
         fontWeight: "bold",
         fontSize: 20
       },
       type: {
-        marginLeft:10,
         fontSize: 15,
-        fontFamily: 'Roboto'
+        fontFamily: 'Roboto',
+        color: colors.secondary,
       },
       location: {
-        marginLeft:10,
-        fontSize: 13,
-        fontFamily:'sans-serif-light'
+        flexDirection: 'row',
+        marginVertical: 10,
+        flexWrap: "wrap",
+        alignItems: 'center',
       },
       desc: {
-        marginLeft:10,
-        padding:5,
         fontSize: 13,
-        fontFamily:'sans-serif-condensed'
+        fontFamily:'sans-serif-condensed',
+        color: colors.medium,
+        paddingTop: 5,
       },
       search: {
         marginLeft:10,
@@ -113,11 +121,18 @@ export default Update;
         fontFamily:'sans-serif-light',
         color:"grey"
       },
-      link: {
-        marginLeft:10,
-        fontSize: 12,
-        fontFamily:'sans-serif-light',
-        color:"navy"
+      card: {
+        marginHorizontal: 10,
+        marginBottom: 10,
+        shadowColor: colors.black,
+        padding: 5,
+      },
+      searchBox: { 
+        height: 40, 
+        margin:10,
+        borderRadius: 15,
+        padding: 10,
+        backgroundColor: colors.white,
       }
     });
 
