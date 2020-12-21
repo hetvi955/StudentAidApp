@@ -12,6 +12,8 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { MaterialIcons } from '@expo/vector-icons';
 
+import db from '../sqlite/database'
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -34,8 +36,7 @@ Notifications.setNotificationHandler({
 
 //function for scheduling notifications
 async function schedulePushNotification(title, body) {
-    const trigger = new Date('2020-12-20T09:40:00.000Z')
-    console.log(trigger);
+    const trigger = new Date('2020-12-20T09:40:00.000Z');
     await Notifications.scheduleNotificationAsync({
         content: {
             title: title,
@@ -77,42 +78,49 @@ async function registerForPushNotificationsAsync() {
 }
 
 export default function DailyWork(props) {
-    const [notes, setNotes] = useState(data);
+    const [notes, setNotes] = useState([]);
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
     useEffect(() => {
-        try {
-            /* to do
-             Get all the NoteDetails of the user in db and assign it to 'notes' using the setNotes method-
-             get route for fetching data
-            */
-            registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+        /* to do
+         Get all the NoteDetails of the user in db and assign it to 'notes' using the setNotes method-
+         get route for fetching data
+        */
+        db.transaction(tx => {
+            tx.executeSql(
+                'SELECT * FROM notes', null,
+                (txObject, result) => {
+                    //console.log('our notes are', result.rows['_array'])
+                    setNotes(result.rows['_array'])
+                },
+                (txObject, err) => console.log('error occurred', err)
+            )
+        }, notes)
+        /*
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
-            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                setNotification(notification);
-            });
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+        });
 
-            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-                console.log(response);
-            });
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+        });
 
 
-            //scheduling alarms for notes(doubt) - no proper example were given in docs
+        //scheduling alarms for notes(doubt) - no proper example were given in docs
 
-            for (let i = 0; i < notes.length; i++) {
-                schedulePushNotification(notes[i].title, notes[i].body)
-            }
-
-            return () => {
-                Notifications.removeNotificationSubscription(notificationListener);
-                Notifications.removeNotificationSubscription(responseListener);
-            };
-        } catch (error) {
-            console.log(error);
+        for (let i = 0; i < notes.length; i++) {
+            schedulePushNotification(notes[i].title, notes[i].body)
         }
-    }, [])
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener);
+            Notifications.removeNotificationSubscription(responseListener);
+        };*/
+    })
 
     return (
         <View style={styles.container}>
@@ -124,20 +132,21 @@ export default function DailyWork(props) {
             <View style={styles.list}>
                 <FlatList
                     numColumns={2}
-                    keyExtractor={(item) => item.key}
+                    keyExtractor={(item) => item.id}
                     data={notes}
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => { props.navigation.navigate('Note', item) }}>
                             <Text style={styles.item}>{item.title}</Text>
                             <TouchableOpacity onPress={() => {
                                 props.navigation.navigate('Schedule', {
-                                    key: item.key,
+                                    id: item.id,
                                     title: item.title,
                                     alarm: item.alarm
                                 })
                             }}>
                                 <MaterialIcons name="notifications" />
                             </TouchableOpacity>
+
                         </TouchableOpacity>
                     )}
                 />

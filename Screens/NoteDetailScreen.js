@@ -12,6 +12,8 @@ import {
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 
+import db from '../sqlite/database'
+
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label("Title"),
     body: Yup.string().label("Body"),
@@ -33,6 +35,13 @@ const NoteDetail = (props) => {
                         /* Put route/ Update route
                            Edit note feature, update title and body of the note in db
                         */
+                        db.transaction(tx => {
+                            tx.executeSql(
+                                'UPDATE notes SET title=?, body=? WHERE id=?', [values.title, values.body, props.route.params.id],
+                                (txObject, result) => console.log('successfully updated', result),
+                                (txObject, err) => console.log('error occurred', err)
+                            )
+                        })
                     }}
                     validationSchema={validationSchema}
                 >
