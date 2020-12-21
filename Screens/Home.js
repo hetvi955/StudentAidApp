@@ -1,11 +1,99 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-function Home() {
+import {View,  
+  Text, 
+  Image, 
+  SafeAreaView, 
+  StyleSheet,
+  Dimensions } from 'react-native';
+import students from '../assets/students.png';
+import { AppLoading } from "expo";
+import {
+  useFonts,
+  Raleway_200ExtraLight,
+} from '@expo-google-fonts/raleway';
+import { Video } from 'expo-av';
+const { height , width} = Dimensions.get('window');
+
+export default function Home() { 
+  let [fontsLoaded] = useFonts({
+   Raleway_200ExtraLight,
+  });
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Home</Text>
-    </View>
-  );
+    <SafeAreaView >
+      <View style={{ flexDirection: 'row'}}>
+      <Video source={require('../assets/animations/handShake.mp4')}
+      rate={1}
+      isMuted={true}
+      resizeMode="cover"
+      shouldPlay
+      isLooping
+      style={styles.animationTop}
+     ></Video> 
+  
+      <Video source={require('../assets/animations/notepad.mp4')}
+      rate={0.5}
+      isMuted={true}
+      resizeMode="cover"
+      shouldPlay
+      isLooping
+      style={{width: 110,
+              height: 110,
+              marginLeft: 0.12*width,
+              marginTop:0.07*height}}
+     ></Video> 
+      </View>
+
+      <Text
+          style={{
+            fontSize:35,
+            alignSelf:"center",
+            marginTop:0.05*height,
+            marginLeft: 0.08*width,
+            fontFamily: 'Raleway_200ExtraLight',
+            color:'rgb(100,140,160)'
+          }}>
+          One solution for all your worries!
+      </Text>
+
+      <View style={{ flexDirection: 'row'}}>
+      <Video source={require('../assets/animations/dueDates.mp4')}
+      rate={0.4}
+      isMuted={true}
+      resizeMode="cover"
+      shouldPlay
+      isLooping
+      style={{ width: 210, height: 210, marginTop: 0}}
+     ></Video> 
+  
+      <Video source={require('../assets/animations/idea.mp4')}
+      rate={0.8}
+      isMuted={true}
+      resizeMode="cover"
+      shouldPlay
+      isLooping
+      style={styles.animationBottom}
+     ></Video> 
+      </View>
+      <Image source={students} style={{ marginTop : 0, alignSelf: "center", width : width, height : 330}}></Image>
+    </SafeAreaView>
+  )};
 }
 
-export default Home;
+const styles = StyleSheet.create({
+  animationTop: {
+    width: 125,
+    height: 125,
+    marginTop: 0.1*height,
+    marginLeft:0.17*width
+  },
+  animationBottom: {
+    width: 90,
+    height: 90,
+    marginTop: 0.005*height,
+    marginLeft: 0.15*width
+  }
+});
+

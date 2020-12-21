@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-
 import Card from "../components/Card";
 import colors from "../config/colors";
 import routes from "../navigation/routes";

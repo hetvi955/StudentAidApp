@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import {View, Text, ActivityIndicator, StatusBar, StyleSheet,  Linking, ScrollView, SafeAreaView, TextInput} from 'react-native';
+import {View,
+  Text,
+  ActivityIndicator, 
+  StatusBar, 
+  StyleSheet,  
+  Linking, 
+  ScrollView, 
+  SafeAreaView, 
+  TextInput} from 'react-native';
 
 function Update() {
   const [data, setData]= useState([]);
@@ -33,7 +41,7 @@ function getData() {
       
      }else{
        let updates= data.map((val, key)=>{
-         return <View key={key} >
+         return <SafeAreaView key={key} >
            
            <Text style={styles.head}>{val.company.display_name}</Text>
            <Text style={styles.type}>{val.contract_type}</Text>
@@ -43,7 +51,7 @@ function getData() {
                 onPress={() => Linking.openURL(val.redirect_url)}>
             Read more..
           </Text>
-         </View>
+         </SafeAreaView>
        })
 
       return (
