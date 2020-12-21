@@ -11,19 +11,33 @@ import {
   useFonts,
   Raleway_200ExtraLight,
 } from '@expo-google-fonts/raleway';
+import {
+  Karla_400Regular,
+} from '@expo-google-fonts/karla';
 import { Video } from 'expo-av';
 const { height , width} = Dimensions.get('window');
 
 export default function Home() { 
   let [fontsLoaded] = useFonts({
    Raleway_200ExtraLight,
+   Karla_400Regular,
   });
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
   return (
+  
     <SafeAreaView >
+
       <View style={{ flexDirection: 'row'}}>
+      <Text style={{
+            fontSize:11,
+            marginTop:0.09*height,
+            position: 'absolute',
+            fontFamily: 'Karla_400Regular',
+            transform: [{ rotate: "90deg" }],
+            color:'	rgb(128,128,128)'
+          }}>Swipe right.</Text>
       <Video source={require('../assets/animations/handShake.mp4')}
       rate={1}
       isMuted={true}
@@ -50,7 +64,7 @@ export default function Home() {
           style={{
             fontSize:35,
             alignSelf:"center",
-            marginTop:0.05*height,
+            marginTop:0.02*height,
             marginLeft: 0.08*width,
             fontFamily: 'Raleway_200ExtraLight',
             color:'rgb(100,140,160)'
@@ -84,9 +98,9 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   animationTop: {
-    width: 125,
-    height: 125,
-    marginTop: 0.1*height,
+    width: 115,
+    height: 115,
+    marginTop: 0.13*height,
     marginLeft:0.17*width
   },
   animationBottom: {
