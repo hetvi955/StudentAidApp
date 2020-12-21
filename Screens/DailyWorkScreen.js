@@ -34,6 +34,7 @@ Notifications.setNotificationHandler({
     }),
 });
 
+
 //function for scheduling notifications
 async function schedulePushNotification(title, body) {
     const trigger = new Date('2020-12-20T09:40:00.000Z');
@@ -43,7 +44,9 @@ async function schedulePushNotification(title, body) {
             body: body,
             data: { data: 'goes here' },
         },
-        trigger
+        trigger: {
+            seconds: 5
+        }
     });
 }
 async function registerForPushNotificationsAsync() {
@@ -76,7 +79,6 @@ async function registerForPushNotificationsAsync() {
 
     return token;
 }
-
 export default function DailyWork(props) {
     const [notes, setNotes] = useState([]);
     const [expoPushToken, setExpoPushToken] = useState('');
@@ -97,7 +99,7 @@ export default function DailyWork(props) {
                 },
                 (txObject, err) => console.log('error occurred', err)
             )
-        }, notes)
+        })
         /*
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
@@ -111,16 +113,15 @@ export default function DailyWork(props) {
 
 
         //scheduling alarms for notes(doubt) - no proper example were given in docs
-
         for (let i = 0; i < notes.length; i++) {
-            schedulePushNotification(notes[i].title, notes[i].body)
+            schedulePushNotification(notes[i].title, notes[i].body,notes[i])
         }
-
+        //schedulePushNotification(notes[0].title, notes[0].body)
         return () => {
             Notifications.removeNotificationSubscription(notificationListener);
             Notifications.removeNotificationSubscription(responseListener);
-        };*/
-    })
+        }; */
+    }, notes)
 
     return (
         <View style={styles.container}>
