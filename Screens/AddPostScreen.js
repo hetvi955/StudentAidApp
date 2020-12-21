@@ -30,7 +30,6 @@ const validationSchema = Yup.object().shape({
   communities: Yup.array().label("Communities"),
   image: Yup.string().required().label("Image"),
   public: Yup.boolean().label("Public"),
-  anonymous: Yup.boolean().label("Anonymous"),
 });
 
 
@@ -71,7 +70,6 @@ function AddPostScreen() {
             tags: "",
             communities: [],
             public: false,
-            anonymous: false,
             image: "",
           }}
           onSubmit={handleSubmit}
@@ -82,7 +80,6 @@ function AddPostScreen() {
           </View>
           <FormField maxLength={255} name="title" placeholder="Title" />
           <FormField
-            maxLength={255}
             multiline
             name="description"
             numberOfLines={3}
@@ -99,9 +96,6 @@ function AddPostScreen() {
             placeholder="Community"
             width='50%'
           />
-          <View style={styles.picker} >
-            <AppSwitch name="anonymous" title="Anonymous User" />
-          </View>
           <View style={styles.picker} >
             <AppSwitch name="public" title="Public Post" />
           </View>

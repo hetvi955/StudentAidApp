@@ -18,8 +18,6 @@ import AppText from './AppText';
 import Screen from './Screen';
 import ListItem from './ListItem';
 import communityApi from "../api/community";
-import useApi from "../hooks/useApi";
-import ActivityIndicator from './ActivityIndicator';
 
 
 function CommunityPicker({ placeholder, name, width }) {
@@ -31,9 +29,13 @@ function CommunityPicker({ placeholder, name, width }) {
         const result = await communityApi.getCommunities();
         if(!result.ok){
             console.log(result.problem, result.originalError);
+            if(result.data){
+                console.log(result.data.message);
+            }
         }
         const array = result.data.data.map(community => ({...community, selected: false}));
         setUpdatedItems(array);
+
     }
 
     useEffect(() => {
@@ -57,10 +59,8 @@ function CommunityPicker({ placeholder, name, width }) {
         <Modal visible={modalVisible} animationType="slide">
             <Screen style={styles.modal}>
                 <View style={styles.buttonContainer}>
-                    <Button text={'Close'} type="contained" 
-                    color={'#F44336'} icon={<Icon name="close" />} radius={20} 
-                    onPress={() => setModalVisible(false)}
-                    />
+                    <MaterialCommunityIcons name="refresh" size={30} color={colors.primary} onPress={() => { getitems(); }} />
+                    <MaterialCommunityIcons name="window-close" size={30} color={colors.secondary} onPress={() => setModalVisible(false) } />
                 </View>
                 {updatedItems && 
                 <DataTable>
@@ -116,8 +116,10 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-        margin: 20,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        marginBottom: 20,
     },
     modal: {
         flex: 1,

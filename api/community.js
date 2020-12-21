@@ -1,6 +1,8 @@
 import client from './client';
 
-const getCommunities = () => client.get("/community/user_communities");
+const getCommunities = () => client.get("/community");
+
+const getCommunityDetails = (id) => client.get(`/community/${id}`);
 
 const create = (name) => client.post("/community/create", { name });
 
@@ -11,4 +13,5 @@ export default {
   create,
   join,
   getCommunities,
+  getCommunityDetails,
 };
