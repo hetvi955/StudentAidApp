@@ -4,13 +4,14 @@ import { Chip } from 'material-bread';
 
 import colors from "../config/colors";
 import AppText from "../components/AppText";
+import { ScrollView } from "react-native-gesture-handler";
 
 function PostDetailScreen({ route }) {
   const feeds = route.params;
 
   return (
-    <View>
-      <Image style={styles.image} source={{ uri: `data:image/png;base64,${feeds.image}`}} resizeMode='stretch' backgroundColor={colors.dark} />
+    <ScrollView>
+      <Image style={styles.image} source={{ uri: `data:image/png;base64,${feeds.image}`}} resizeMode='contain' backgroundColor={colors.dark} />
       <View style={styles.detailsContainer}>
         <AppText style={styles.title}>{feeds.title}</AppText>
         <AppText style={styles.description}>{feeds.description}</AppText>
@@ -20,7 +21,7 @@ function PostDetailScreen({ route }) {
             <Chip text={tag} style={styles.tag} key={i} />
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -42,8 +43,9 @@ const styles = StyleSheet.create({
   },
   tagsConatiner: {
     flexDirection: 'row',
-    marginVertical: 10,
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    marginBottom: 30,
+    paddingHorizontal: 15,
   },
   tag: {
     marginHorizontal: 5,

@@ -17,6 +17,7 @@ import AppModal from "../components/AppModal";
 
 
 function AccountScreen({ navigation }) {
+  const [refreshing, setRefreshing]  = useState(false);
   const [Communities, setCommunities] = useState([]);
   const [join, setJoin] = useState(false);
   const { user, logOut } = useAuth();
@@ -56,7 +57,11 @@ function AccountScreen({ navigation }) {
         onPress={() => setJoin(true)}
       />
       {join && <AppModal visible={true} setVisible={setJoin} />}
-      <AppText style={styles.header}>Communities</AppText>
+      <View style={styles.communityContainer}>
+        <AppText style={styles.header}>Communities</AppText>
+        <MaterialCommunityIcons name="refresh" size={24} color="black" onPress={() => { getCommunity(); }} />
+      </View>
+      
       {Communities && <FlatList
         data={Communities}
         keyExtractor={(item) => item.id}
@@ -71,6 +76,10 @@ function AccountScreen({ navigation }) {
             <ListItemSeparator />
           </>
         )}
+        refreshing={refreshing}
+        onRefresh={() => {
+          getCommunity();
+        }}
       />}
       <View style={styles.logout}>
         <ListItem
@@ -98,6 +107,12 @@ const styles = StyleSheet.create({
   logout: {
     marginTop: 20,
     marginBottom: 40,
+  },
+  communityContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 20,
   }
 });
 

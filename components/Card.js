@@ -1,41 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons';
 
-import { Chip, FabSpeedDial, Fab, ToggleButton, Icon } from 'material-bread';
+import { Chip, Fab, ToggleButton } from 'material-bread';
 
 import AppText from "./AppText";
 import colors from "../config/colors";
-import ListItemSeparator from "./ListItemSeparator";
+import postApi from "../api/posts";
 
-function Card({ title, tags, image, onPress, description }) {
-  const [up, setUp] = useState(false);
-  const [down, setDown] = useState(false);
+const imageHeight = 200;
+const iconSize = 32;
 
+function Card({ title, tags, image, onPress, description, liked, id, likeCount=0 }) {
+  const [like, setLike] = useState(liked);
+  const [count, setCount] = useState(50+likeCount);
+  const likePost = async(id) => {
+      const result = await postApi.likePost(id);
+      if(!result.ok){
+          console.log(result.problem, result.originalError);
+          return;
+      }
+      setLike(result.data.liked);
+      setCount(prev => result.data.liked ? prev + 1 : prev - 1 );
+  }
 
-  const actionsExtended = [
-    <Fab key={1} backgroundColor={'#009688'} icon={'edit'} style={styles.fab} />,
-    <Fab key={2} backgroundColor={'#F44336'} icon={'delete'} />,
-  ];
-   
+  useEffect(() => {
+    setLike(liked);
+  }, []);
+
   return (
-    
       <View style={styles.card}>
         <TouchableWithoutFeedback onPress={onPress}>
           <View>
             <Image style={styles.image} source={{ uri: `data:image/png;base64,${image}`}} resizeMode='contain' backgroundColor={colors.dark} />
+            <View style={styles.edit}>
+              <Fab backgroundColor={'#F44336'} icon={'delete'} />
+            </View>
             <View style={styles.detailsContainer}>
-              <View style={styles.edit}>
-                <FabSpeedDial
-                  actions={actionsExtended}
-                  fab={<Fab icon="add" />}
-                />
-              </View>
+              
               <AppText style={styles.title} numberOfLines={1}>
                 {title}
               </AppText>
@@ -50,49 +57,21 @@ function Card({ title, tags, image, onPress, description }) {
             </View>
           </View>
         </TouchableWithoutFeedback>
-        <ListItemSeparator />
         <View style={styles.icons}>
           <ToggleButton
-            activeNode={<Icon name="arrow-up-bold" size={32} color={'green'} iconComponent={MaterialCommunityIcons} />}
+            activeNode={<MaterialIcons name="favorite" size={32} color={colors.secondary} />}
             inActiveNode={
-              <Icon
-                name="arrow-up-bold-outline"
-                size={32}
-                style={{ opacity: 0.5 }}
-                color={'green'}
-                iconComponent={MaterialCommunityIcons}
-              />
+              <MaterialIcons name="favorite-border" size={32} color={colors.secondary} style={{ opacity: 0.8 }} />
             }
             size={32}
-            active={up}
+            active={like}
             onPress={() => {
-              setUp(prev => !prev);
-              if(down){
-                setDown(prev => !prev);
-              }
+              setLike(prev => !prev);
+              console.log(like);
+              likePost(id);
             }}
           />
-          <ToggleButton
-            activeNode={<Icon name="arrow-down-bold" size={32} color={'red'} iconComponent={MaterialCommunityIcons} />}
-            inActiveNode={
-              <Icon
-                name="arrow-down-bold-outline"
-                size={32}
-                style={{ opacity: 0.5 }}
-                color={'red'}
-                iconComponent={MaterialCommunityIcons}
-              />
-            }
-            size={32}
-            active={down}
-            onPress={() => {
-              setDown(prev => !prev);
-              if(up){
-                setUp(prev => !prev)
-              }
-            }}
-          />
-          <AppText>+50</AppText>
+          <AppText style={{ color: colors.medium }}>{count}</AppText>
         </View>
       </View> 
   );
@@ -110,7 +89,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
+    height: imageHeight,
   },
   description: {
     color: colors.medium,
@@ -132,14 +111,14 @@ const styles = StyleSheet.create({
   icons: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 5,
     alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 5,
   },
   edit: {
-    flex: 1,
-    flexDirection: 'row',
-    padding: 10,
+    position: 'absolute',
+    marginLeft: '85%',
+    marginTop: imageHeight-iconSize,
   },
 });
 

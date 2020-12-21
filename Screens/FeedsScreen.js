@@ -5,13 +5,15 @@ import colors from "../config/colors";
 import routes from "../navigation/routes";
 import postsApi from '../api/posts';
 import AppText from "../components/AppText";
+import CommunityApi from "../api/community";
 
 
-function FeedsScreen({ navigation }) {
+function FeedsScreen({ navigation, communityID }) {
     const [posts, setPosts]  = useState([]);
     const [refreshing, setRefreshing]  = useState(false);
 
-    const getPosts = async() => {
+
+    const getPublicPost = async() => {
         const result = await postsApi.getPublicPosts();
         if(!result.ok){
             console.log(result.problem, result.originalError);
@@ -20,8 +22,18 @@ function FeedsScreen({ navigation }) {
         setPosts(result.data.data);
     }
 
+    const getCommunityPost = async() => {
+        const result = await CommunityApi.getCommunityDetails(communityID);
+        if(!result.ok){
+            console.log(result.problem, result.originalError);
+            return;
+        }
+        setPosts(result.data.data.posts);
+    }
+
     useEffect(() => {
-        getPosts();
+        console.log(communityID);
+        communityID ? getCommunityPost() : getPublicPost();
     }, [])
     return (
         <View style={styles.screen}>
@@ -36,12 +48,16 @@ function FeedsScreen({ navigation }) {
                     description={item.description}
                     image={item.image}
                     onPress={() => navigation.navigate(routes.POST_DETAILS, item)}
+                    key={item._id}
+                    liked={item.isLiked}
+                    id={item._id}
+                    likeCount={item.voters.length}
                 />
                 </>
             )}
             refreshing={refreshing}
             onRefresh={() => {
-                getPosts();
+                getPublicPost();
             }}
             />
             }

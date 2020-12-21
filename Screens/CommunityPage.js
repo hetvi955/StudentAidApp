@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Image, StyleSheet, FlatList, SafeAreaView, ScrollView, VirtualizedList } from "react-native";
 import { Chip, Icon, Button } from 'material-bread';
 import { useRoute } from '@react-navigation/native';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -9,15 +9,43 @@ import colors from "../config/colors";
 import AppText from "../components/AppText";
 import useApi from "../hooks/useApi";
 import CommunityApi from "../api/community";
+import Card from "../components/Card";
+import Screen from '../components/Screen';
+import routes from "../navigation/routes";
 
-function CommunityPage() {
+function CommunityPage({ navigation }) {
+    const [posts, setPosts]  = useState([]);
+    const [refreshing, setRefreshing]  = useState(false);
 
     const route = useRoute();
 
+    const getCommunityPost = async() => {
+        const result = await CommunityApi.getCommunityDetails(route.params.id);
+        if(!result.ok){
+            console.log(result.problem, result.originalError);
+            return;
+        }
+        setPosts(result.data.data.posts);
+    }
+
+    useEffect(() => {
+        getCommunityPost();
+    }, [])
+
+    const getItem = (data, index) => {
+        return data[index];
+    }
+      
+
+    const getItemCount = (data) => {
+        return data.length;
+    }
+
+    
     return (
-        <View>
+        <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView>
             <Image style={styles.image} source={require("../assets/community.png")} />
-            
             <View style={styles.button}>
                 <Button text={route.params.isAdmin ? "Admin" : "Member"} type="flat" color={colors.secondary} />
             </View>
@@ -32,7 +60,32 @@ function CommunityPage() {
                     />}
                 />
             </View>
-        </View>
+            {posts && <VirtualizedList
+            data={posts}
+            initialNumToRender={0}
+            keyExtractor={(post) => post._id}
+            renderItem={({ item }) => (
+                <>
+                <Card
+                    title={item.title}
+                    tags={item.tags}
+                    description={item.description}
+                    image={item.image}
+                    key={item._id}
+                    onPress={() => navigation.navigate(routes.POST_DETAILS, item)}
+                />
+                </>
+            )}
+            getItemCount={getItemCount}
+            getItem={getItem}
+            refreshing={refreshing}
+            onRefresh={() => {
+                getCommunityPost();
+            }}
+            />
+            }
+        </ScrollView>
+        </SafeAreaView>
     );
 }
 
@@ -59,7 +112,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         paddingRight : 20,
         marginTop : 10,
-    }
+    },
+    screen: {
+        flex: 1,
+    },
 });
 
 export default CommunityPage;
