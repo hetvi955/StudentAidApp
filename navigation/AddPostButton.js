@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from '@expo/vector-icons';
 
 import colors from "../config/colors";
 
@@ -8,11 +8,7 @@ function AddPostButton({ onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
-        <MaterialCommunityIcons
-          name="plus-circle"
-          color={colors.white}
-          size={40}
-        />
+        <FontAwesome5 name="plus" size={30} color={colors.white} />
       </View>
     </TouchableOpacity>
   );
