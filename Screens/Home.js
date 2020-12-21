@@ -8,6 +8,7 @@ import {View,
 import students from '../assets/students.png';
 import { AppLoading } from "expo";
 import {
+
   useFonts,
   Raleway_200ExtraLight,
 } from '@expo-google-fonts/raleway';
@@ -31,24 +32,37 @@ export default function Home() {
 
       <View style={{ flexDirection: 'row'}}>
       <Text style={{
-            fontSize:11,
-            marginTop:0.09*height,
+            fontSize:12,
+            marginTop:0.13*height,
             position: 'absolute',
             fontFamily: 'Karla_400Regular',
             transform: [{ rotate: "90deg" }],
-            color:'	rgb(128,128,128)'
+            color:'	rgb(100,100,100)'
           }}>Swipe right.</Text>
-      <Video source={require('../assets/animations/handShake.mp4')}
-      rate={1}
-      isMuted={true}
-      resizeMode="cover"
-      shouldPlay
-      isLooping
-      style={styles.animationTop}
-     ></Video> 
+
+           <Image source={require('../assets/animations/right.gif')}
+            isMuted={true}
+            resizeMode="cover"
+            shouldPlay
+            isLooping
+            style={{
+            width:50,
+            height:40,
+            marginTop:0.04*height,
+            position: 'absolute',
+            marginLeft:10
+          }}
+        ></Image> 
+          <Image source={require('../assets/animations/handShake.gif')}
+          rate={1}
+          isMuted={true}
+          resizeMode="cover"
+          shouldPlay
+          isLooping
+          style={styles.animationTop}
+        ></Image> 
   
-      <Video source={require('../assets/animations/notepad.mp4')}
-      rate={0.5}
+      <Image source={require('../assets/animations/notepad.gif')}
       isMuted={true}
       resizeMode="cover"
       shouldPlay
@@ -57,7 +71,7 @@ export default function Home() {
               height: 110,
               marginLeft: 0.12*width,
               marginTop:0.07*height}}
-     ></Video> 
+     ></Image> 
       </View>
 
       <Text
@@ -73,23 +87,21 @@ export default function Home() {
       </Text>
 
       <View style={{ flexDirection: 'row'}}>
-      <Video source={require('../assets/animations/dueDates.mp4')}
-      rate={0.4}
+      <Image source={require('../assets/animations/calender.gif')}
       isMuted={true}
       resizeMode="cover"
       shouldPlay
       isLooping
-      style={{ width: 210, height: 210, marginTop: 0}}
-     ></Video> 
+      style={{ width: 100, height: 100, margin:0.12*width}}
+     ></Image> 
   
-      <Video source={require('../assets/animations/idea.mp4')}
-      rate={0.8}
+      <Image source={require('../assets/animations/idea.gif')}
       isMuted={true}
       resizeMode="cover"
       shouldPlay
       isLooping
       style={styles.animationBottom}
-     ></Video> 
+     ></Image> 
       </View>
       <Image source={students} style={{ marginTop : 0, alignSelf: "center", width : width, height : 330}}></Image>
     </SafeAreaView>
@@ -106,8 +118,8 @@ const styles = StyleSheet.create({
   animationBottom: {
     width: 90,
     height: 90,
-    marginTop: 0.005*height,
-    marginLeft: 0.15*width
+    marginTop: 0.015*height,
+    marginLeft: 0.20*width
   }
 });
 
