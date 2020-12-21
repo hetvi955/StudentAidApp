@@ -12,17 +12,19 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { MaterialIcons } from '@expo/vector-icons';
 
+import db from '../sqlite/database'
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const data = [
-    { key: 1, title: 'Note 1', body: 'Hello everyone, how are you', alarm: '2020-12-19T11:45:00.000Z' },
-    { key: 2, title: 'Note 2', body: 'Hope everyone are good', alarm: '2020-12-19T12:29:00.000Z' },
-    { key: 3, title: 'Note 3', body: 'You knwo what, I am great', alarm: '2020-12-19T12:29:00.000Z' },
-    { key: 4, title: 'Note 4', body: 'Ammuku dummuku ammal dummal', alarm: '2020-12-19T12:29:00.000Z' },
-    { key: 5, title: 'Note 5', body: 'Ey yo! I have become an android developer now', alarm: '2020-12-19T12:29:00.000Z' },
-    { key: 6, title: 'Note 6', body: 'Come on man, you got this!', alarm: '2020-12-19T12:29:00.000Z' },
-    { key: 7, title: 'Note 7', body: 'Bla bla bla bla bla bla bla bla bla', alarm: '2020-12-19T12:29:00.000Z' },
+    { key: 1, title: 'Note 1', body: 'Hello everyone, how are you', alarm: '2020-12-20T09:33:00.000Z' },
+    { key: 2, title: 'Note 2', body: 'Hope everyone are good', alarm: '2020-12-20T09:33:00.000Z' },
+    { key: 3, title: 'Note 3', body: 'You knwo what, I am great', alarm: '2020-12-20T09:33:00.000Z' },
+    { key: 4, title: 'Note 4', body: 'Ammuku dummuku ammal dummal', alarm: '2020-12-20T09:33:00.000Z' },
+    { key: 5, title: 'Note 5', body: 'Ey yo! I have become an android developer now', alarm: '2020-12-20T09:33:00.000Z' },
+    { key: 6, title: 'Note 6', body: 'Come on man, you got this!', alarm: '2020-12-20T09:33:00.000Z' },
+    { key: 7, title: 'Note 7', body: 'Bla bla bla bla bla bla bla bla bla', alarm: '2020-12-20T09:33:00.000Z' },
 ];
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -33,15 +35,15 @@ Notifications.setNotificationHandler({
 });
 
 //function for scheduling notifications
-async function schedulePushNotification(title, body, alarm) {
-    const trigger = new Date(alarm)
+async function schedulePushNotification(title, body) {
+    const trigger = new Date('2020-12-20T09:40:00.000Z');
     await Notifications.scheduleNotificationAsync({
         content: {
             title: title,
             body: body,
             data: { data: 'goes here' },
         },
-        trigger,
+        trigger
     });
 }
 async function registerForPushNotificationsAsync() {
@@ -76,17 +78,27 @@ async function registerForPushNotificationsAsync() {
 }
 
 export default function DailyWork(props) {
-    const [notes, setNotes] = useState(data);
+    const [notes, setNotes] = useState([]);
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
     useEffect(() => {
-
         /* to do
          Get all the NoteDetails of the user in db and assign it to 'notes' using the setNotes method-
          get route for fetching data
         */
+        db.transaction(tx => {
+            tx.executeSql(
+                'SELECT * FROM notes', null,
+                (txObject, result) => {
+                    //console.log('our notes are', result.rows['_array'])
+                    setNotes(result.rows['_array'])
+                },
+                (txObject, err) => console.log('error occurred', err)
+            )
+        }, notes)
+        /*
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -97,20 +109,18 @@ export default function DailyWork(props) {
             console.log(response);
         });
 
-        /*
+
         //scheduling alarms for notes(doubt) - no proper example were given in docs
 
         for (let i = 0; i < notes.length; i++) {
-           schedulePushNotification(notes[i].title,notes[i].body,notes[i].alarm)
+            schedulePushNotification(notes[i].title, notes[i].body)
         }
-
-        */
 
         return () => {
             Notifications.removeNotificationSubscription(notificationListener);
             Notifications.removeNotificationSubscription(responseListener);
-        };
-    }, [])
+        };*/
+    })
 
     return (
         <View style={styles.container}>
@@ -122,20 +132,21 @@ export default function DailyWork(props) {
             <View style={styles.list}>
                 <FlatList
                     numColumns={2}
-                    keyExtractor={(item) => item.key}
-                    data={data}
+                    keyExtractor={(item) => item.id}
+                    data={notes}
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => { props.navigation.navigate('Note', item) }}>
                             <Text style={styles.item}>{item.title}</Text>
                             <TouchableOpacity onPress={() => {
                                 props.navigation.navigate('Schedule', {
-                                    key: item.key,
+                                    id: item.id,
                                     title: item.title,
                                     alarm: item.alarm
                                 })
                             }}>
                                 <MaterialIcons name="notifications" />
                             </TouchableOpacity>
+
                         </TouchableOpacity>
                     )}
                 />
