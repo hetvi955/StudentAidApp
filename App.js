@@ -6,6 +6,7 @@ import AppNavigation from './navigation/AppNavigation';
 import NavigationTheme from './navigation/NavigationTheme';
 import AuthContext from "./Auth/context";
 import AuthStorage from "./Auth/storage";
+import APPSQLite from "./sqlite/example";
 
 export default function App() {
   const [ user, setUser ] = useState();

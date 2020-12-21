@@ -7,11 +7,13 @@ import routes from "../navigation/routes";
 import postsApi from '../api/posts';
 import AppText from "../components/AppText";
 import CommunityApi from "../api/community";
+import useAuth from "../Auth/useAuth";
 
 
-function FeedsScreen({ navigation, communityID }) {
+function FeedsScreen({ navigation }) {
     const [posts, setPosts]  = useState([]);
     const [refreshing, setRefreshing]  = useState(false);
+    const { user } = useAuth();
 
 
     const getPublicPost = async() => {
@@ -23,18 +25,8 @@ function FeedsScreen({ navigation, communityID }) {
         setPosts(result.data.data);
     }
 
-    const getCommunityPost = async() => {
-        const result = await CommunityApi.getCommunityDetails(communityID);
-        if(!result.ok){
-            console.log(result.problem, result.originalError);
-            return;
-        }
-        setPosts(result.data.data.posts);
-    }
-
     useEffect(() => {
-        console.log(communityID);
-        communityID ? getCommunityPost() : getPublicPost();
+        getPublicPost();
     }, [])
     return (
         <View style={styles.screen}>
@@ -53,6 +45,7 @@ function FeedsScreen({ navigation, communityID }) {
                     liked={item.isLiked}
                     id={item._id}
                     likeCount={item.voters.length}
+                    deleteButton={item.creator.id === user.id}
                 />
                 </>
             )}
