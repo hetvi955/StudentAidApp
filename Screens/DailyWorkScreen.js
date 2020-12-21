@@ -125,7 +125,7 @@ export default function DailyWork(props) {
     return (
         <View style={styles.container}>
             <View style={styles.button}>
-                <Button title="Add work" onPress={() => {
+                <Button title=" + Add work" onPress={() => {
                     props.navigation.navigate('NewNote')
                 }} />
             </View>
@@ -161,7 +161,9 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
     },
     button: {
-        marginTop: 2
+        marginTop: 0.01*windowHeight,
+        marginLeft: 0.15*windowWidth,
+        width: 0.7*windowWidth,
     },
     footer: {
         position: 'absolute',
@@ -180,13 +182,13 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     item: {
-        width: 150,
+        width: 120,
         height: 100,
         marginTop: 30,
-        padding: 10,
+        padding: 30,
         backgroundColor: 'pink',
         borderWidth: 1,
         borderRadius: 8,
-        marginHorizontal: 5
+        marginHorizontal: 15
     }
 });
