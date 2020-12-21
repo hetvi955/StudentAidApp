@@ -12,11 +12,12 @@ import CommunityApi from "../api/community";
 import Card from "../components/Card";
 import Screen from '../components/Screen';
 import routes from "../navigation/routes";
+import useAuth from "../Auth/useAuth";
 
 function CommunityPage({ navigation }) {
     const [posts, setPosts]  = useState([]);
     const [refreshing, setRefreshing]  = useState(false);
-
+    const { user } = useAuth();
     const route = useRoute();
 
     const getCommunityPost = async() => {
@@ -44,7 +45,6 @@ function CommunityPage({ navigation }) {
     
     return (
         <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
             <Image style={styles.image} source={require("../assets/community.png")} />
             <View style={styles.button}>
                 <Button text={route.params.isAdmin ? "Admin" : "Member"} type="flat" color={colors.secondary} />
@@ -73,6 +73,10 @@ function CommunityPage({ navigation }) {
                     image={item.image}
                     key={item._id}
                     onPress={() => navigation.navigate(routes.POST_DETAILS, item)}
+                    liked={item.isLiked}
+                    id={item._id}
+                    likeCount={item.voters.length}
+                    deleteButton={item.creator._id === user.id}
                 />
                 </>
             )}
@@ -84,7 +88,6 @@ function CommunityPage({ navigation }) {
             }}
             />
             }
-        </ScrollView>
         </SafeAreaView>
     );
 }
@@ -95,7 +98,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: "100%",
-        height: 300,
+        height: 250,
     },
     title: {
         fontSize: 24,

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Image,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -16,9 +17,9 @@ import postApi from "../api/posts";
 const imageHeight = 200;
 const iconSize = 32;
 
-function Card({ title, tags, image, onPress, description, liked, id, likeCount=0 }) {
+function Card({ title, tags, image, onPress, description, liked, id, likeCount, deleteButton }) {
   const [like, setLike] = useState(liked);
-  const [count, setCount] = useState(50+likeCount);
+  const [count, setCount] = useState(likeCount);
   const likePost = async(id) => {
       const result = await postApi.likePost(id);
       if(!result.ok){
@@ -29,6 +30,15 @@ function Card({ title, tags, image, onPress, description, liked, id, likeCount=0
       setCount(prev => result.data.liked ? prev + 1 : prev - 1 );
   }
 
+  const deletePosts = async(id) => {
+    const result = await postApi.deletePost(id);
+    if(!result.ok){
+      console.log(result.problem, result.originalError);
+      return;
+    }
+
+  }
+
   useEffect(() => {
     setLike(liked);
   }, []);
@@ -37,10 +47,25 @@ function Card({ title, tags, image, onPress, description, liked, id, likeCount=0
       <View style={styles.card}>
         <TouchableWithoutFeedback onPress={onPress}>
           <View>
-            <Image style={styles.image} source={{ uri: `data:image/png;base64,${image}`}} resizeMode='contain' backgroundColor={colors.dark} />
-            <View style={styles.edit}>
-              <Fab backgroundColor={'#F44336'} icon={'delete'} />
-            </View>
+            <Image style={styles.image} source={{ uri: `data:image/png;base64,${image}`}} resizeMode='cover' backgroundColor={colors.dark} />
+            {deleteButton && <View style={styles.edit}>
+              <Fab 
+                backgroundColor={'#F44336'} 
+                icon={'delete'} 
+                onPress={() => Alert.alert(
+                  "Delete",
+                  "Are you sure to delete this post?",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed")
+                    },
+                    { text: "yes", onPress: () => deletePosts(id) }
+                  ],
+                  { cancelable: false }
+                )}
+              />
+            </View>}
             <View style={styles.detailsContainer}>
               
               <AppText style={styles.title} numberOfLines={1}>
@@ -67,7 +92,6 @@ function Card({ title, tags, image, onPress, description, liked, id, likeCount=0
             active={like}
             onPress={() => {
               setLike(prev => !prev);
-              console.log(like);
               likePost(id);
             }}
           />
